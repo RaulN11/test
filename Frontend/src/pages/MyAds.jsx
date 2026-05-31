@@ -17,18 +17,20 @@ export default function MyAds() {
             .finally(() => setLoading(false))
     }, [])
 
+    const activeLabel = ads.length === 1 ? t('myads_active') : t('myads_active_plural')
+
     return (
         <div className="page fade-in">
-            <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
                     <h1 className="page-title">
                         {t('myads_title')} <span className="gradient-text">{t('myads_title_accent')}</span>
                     </h1>
-                    <p className="page-sub">{loading ? '…' : `${ads.length} active listings`}</p>
+                    <p className="page-sub">{loading ? '…' : `${ads.length} ${activeLabel}`}</p>
                 </div>
                 <Link to="/sell">
                     <button className="btn btn-primary">
-                        <i className="fa-solid fa-plus" /> New listing
+                        <i className="fa-solid fa-plus" /> {t('myads_new_listing')}
                     </button>
                 </Link>
             </div>
@@ -67,7 +69,7 @@ export default function MyAds() {
                                 <p className="ad-seller">{ad.year} · {ad.car?.chassis}</p>
                                 <p className="ad-price">${ad.price?.toLocaleString()}</p>
                                 <div className="ad-tags">
-                                    <span className="badge badge-accent">Your listing</span>
+                                    <span className="badge badge-accent">{t('myads_your_listing')}</span>
                                     <span className="badge badge-surface">{ad.car?.chassis}</span>
                                 </div>
                             </div>

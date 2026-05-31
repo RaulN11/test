@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Client } from '@stomp/stompjs'
 import { api } from '../api/api.js'
+import { useLanguage } from '../context/LanguageContext.jsx'
 
 export default function Chat() {
     const { conversationId } = useParams()
@@ -14,6 +15,7 @@ export default function Chat() {
     const activeConvRef = useRef(null)
     const bottomRef = useRef(null)
     const myEmail = api.getEmail()
+    const { t } = useLanguage()
 
     useEffect(() => {
         api.getMyConversations().then(setConversations)
@@ -67,20 +69,23 @@ export default function Chat() {
 
     const otherParty = conv => conv.buyerEmail === myEmail ? conv.sellerEmail : conv.buyerEmail
 
+    const convCount = conversations.length
+    const convLabel = convCount === 1 ? t('chat_conversation') : t('chat_conversations')
+
     return (
         <div className="chat-layout">
             {/* Sidebar */}
             <div className="chat-sidebar">
                 <div className="chat-sidebar-header">
-                    <h2 style={{ fontSize: '16px', fontWeight: 700 }}>Messages</h2>
+                    <h2 style={{ fontSize: '16px', fontWeight: 700 }}>{t('chat_title')}</h2>
                     <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                        {conversations.length} conversation{conversations.length !== 1 ? 's' : ''}
+                        {convCount} {convLabel}
                     </p>
                 </div>
                 <div className="chat-list">
-                    {conversations.length === 0 && (
+                    {convCount === 0 && (
                         <p style={{ padding: '20px 14px', fontSize: '13px', color: 'var(--text-dim)' }}>
-                            No conversations yet. Contact a seller from any ad.
+                            {t('chat_empty_list')}
                         </p>
                     )}
                     {conversations.map(conv => (
@@ -101,7 +106,7 @@ export default function Chat() {
                 {!activeConv ? (
                     <div className="chat-empty">
                         <i className="fa-regular fa-comment-dots" style={{ fontSize: 48, color: 'var(--text-dim)' }} />
-                        <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Select a conversation</p>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>{t('chat_select')}</p>
                     </div>
                 ) : <>
                     <div className="chat-header">
@@ -113,7 +118,7 @@ export default function Chat() {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: connected ? 'var(--success)' : 'var(--text-dim)' }}>
                             <span className={`status-dot ${connected ? 'online' : 'offline'}`} />
-                            {connected ? 'Live' : 'Reconnecting…'}
+                            {connected ? t('chat_live') : t('chat_reconnecting')}
                         </div>
                     </div>
 
@@ -140,7 +145,7 @@ export default function Chat() {
                         <input
                             className="input"
                             style={{ flex: 1 }}
-                            placeholder="Type a message…"
+                            placeholder={t('chat_type_placeholder')}
                             value={input}
                             onChange={e => setInput(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && sendMessage()}

@@ -30,14 +30,24 @@ export default function Results() {
         setShowExport(false)
     }
 
-    const subtitle = [brand, model, chassis].filter(Boolean).join(' · ') || 'All cars'
+    const subtitle = [brand, model, chassis].filter(Boolean).join(' · ') || t('results_all')
+
+    const formats = [
+        { key: 'JSON', desc: t('results_fmt_json') },
+        { key: 'XML',  desc: t('results_fmt_xml') },
+        { key: 'CSV',  desc: t('results_fmt_csv') },
+    ]
 
     return (
         <div className="page fade-in">
             <div className="results-bar">
                 <div>
-                    <h1 className="page-title">{t('results_title')} <span className="gradient-text">{t('results_title_accent')}</span></h1>
-                    <p className="page-sub">{subtitle} · {loading ? '…' : `${ads.length} listings`}</p>
+                    <h1 className="page-title">
+                        {t('results_title')} <span className="gradient-text">{t('results_title_accent')}</span>
+                    </h1>
+                    <p className="page-sub">
+                        {subtitle} · {loading ? '…' : `${ads.length} ${t('results_listings')}`}
+                    </p>
                 </div>
                 <button className="btn btn-outline" onClick={() => setShowExport(true)}>
                     <i className="fa-solid fa-download" />
@@ -59,7 +69,7 @@ export default function Results() {
                     <i className="fa-solid fa-car-burst" />
                     <p>{t('results_none')}</p>
                     <Link to="/search">
-                        <button className="btn btn-outline">Modify search</button>
+                        <button className="btn btn-outline">{t('results_modify_search')}</button>
                     </Link>
                 </div>
             )}
@@ -97,16 +107,14 @@ export default function Results() {
                             {t('results_export_title')}
                         </h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>
-                            Choose a format to download your results.
+                            {t('results_export_subtitle')}
                         </p>
-                        {['JSON','XML','CSV'].map(f => (
-                            <label key={f} className={`export-option ${format === f ? 'selected' : ''}`} onClick={() => setFormat(f)}>
-                                <input type="radio" name="format" value={f} checked={format === f} onChange={() => setFormat(f)} />
+                        {formats.map(({ key, desc }) => (
+                            <label key={key} className={`export-option ${format === key ? 'selected' : ''}`} onClick={() => setFormat(key)}>
+                                <input type="radio" name="format" value={key} checked={format === key} onChange={() => setFormat(key)} />
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: '14px' }}>{f}</div>
-                                    <div style={{ fontSize: '12px', color: 'var(--text-dim)' }}>
-                                        {f === 'JSON' ? 'JavaScript Object Notation' : f === 'XML' ? 'Extensible Markup Language' : 'Comma-Separated Values'}
-                                    </div>
+                                    <div style={{ fontWeight: 600, fontSize: '14px' }}>{key}</div>
+                                    <div style={{ fontSize: '12px', color: 'var(--text-dim)' }}>{desc}</div>
                                 </div>
                             </label>
                         ))}

@@ -53,7 +53,7 @@ export default function AdDetails() {
         <div className="empty-state" style={{ minHeight: '60vh' }}>
             <i className="fa-solid fa-triangle-exclamation" />
             <p>{error || t('ad_not_found')}</p>
-            <Link to="/search"><button className="btn btn-outline">Back to search</button></Link>
+            <Link to="/search"><button className="btn btn-outline">{t('ad_back')}</button></Link>
         </div>
     )
 
@@ -61,7 +61,7 @@ export default function AdDetails() {
         <div className="page fade-in">
             {/* Back */}
             <Link to="/results" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', fontSize: '14px', fontWeight: 500, marginBottom: '24px' }}>
-                <i className="fa-solid fa-arrow-left" /> Back to results
+                <i className="fa-solid fa-arrow-left" /> {t('ad_back')}
             </Link>
 
             <ErrorMessage message={error} />
@@ -71,7 +71,7 @@ export default function AdDetails() {
                 <div>
                     {ad.images?.length > 0
                         ? <img className="ad-detail-img" src={`http://localhost:8082${ad.images[0]}`} alt="Car" />
-                        : <div className="ad-img-placeholder" style={{ borderRadius: 'var(--radius)', border: '1px solid var(--border)', aspectRatio: '16/9' }}>
+                        : <div className="ad-img-placeholder" style={{ borderRadius: 'var(--radius)', border: '1px solid var(--border)', aspectRatio: '16/9', marginBottom: '20px' }}>
                             <i className="fa-solid fa-car" />
                         </div>
                     }
@@ -79,13 +79,15 @@ export default function AdDetails() {
                     {/* Specs grid */}
                     <div className="spec-grid">
                         {[
-                            ['Year', ad.year, 'fa-calendar'],
-                            ['Price', `$${ad.price?.toLocaleString()}`, 'fa-tag'],
-                            ['Chassis', ad.car?.chassis, 'fa-car'],
-                            ['Seller', `${ad.firstName} ${ad.lastName}`, 'fa-user'],
+                            [t('ad_year'),    ad.year,                          'fa-calendar'],
+                            [t('ad_price'),   `$${ad.price?.toLocaleString()}`, 'fa-tag'],
+                            [t('ad_chassis'), ad.car?.chassis,                  'fa-car'],
+                            [t('ad_seller'),  `${ad.firstName} ${ad.lastName}`, 'fa-user'],
                         ].map(([label, value, icon]) => (
                             <div key={label} className="spec-item">
-                                <div className="spec-label"><i className={`fa-solid ${icon}`} style={{ marginRight: 5 }} />{label}</div>
+                                <div className="spec-label">
+                                    <i className={`fa-solid ${icon}`} style={{ marginRight: 5 }} />{label}
+                                </div>
                                 <div className="spec-value">{value}</div>
                             </div>
                         ))}
@@ -99,7 +101,7 @@ export default function AdDetails() {
                         {ad.car?.brand} {ad.car?.model}
                     </h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '20px' }}>
-                        {ad.year} · Listed by {ad.firstName} {ad.lastName}
+                        {ad.year} · {t('ad_listed_by')} {ad.firstName} {ad.lastName}
                     </p>
 
                     <div style={{
@@ -110,7 +112,9 @@ export default function AdDetails() {
                         marginBottom: '24px',
                         textAlign: 'center'
                     }}>
-                        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>Asking Price</div>
+                        <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
+                            {t('ad_asking_price')}
+                        </div>
                         <div style={{ fontSize: '36px', fontWeight: 800, color: 'var(--accent)' }}>
                             ${ad.price?.toLocaleString()}
                         </div>
@@ -127,7 +131,7 @@ export default function AdDetails() {
                                     } catch(e) { setError(e.message) }
                                 }}
                             >
-                                <i className="fa-solid fa-comment" /> Contact Seller
+                                <i className="fa-solid fa-comment" /> {t('ad_contact_seller')}
                             </button>
                         )}
 

@@ -33,7 +33,7 @@ export default function Login() {
                         <span className="gradient-text">Ket</span>
                     </div>
                     <h1 style={{ fontSize: '21px', fontWeight: 700, marginBottom: '6px' }}>
-                        Welcome back
+                        {t('login_welcome')}
                     </h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
                         {t('login_new')}{' '}
@@ -48,7 +48,7 @@ export default function Login() {
                     <input
                         className="input"
                         type="email"
-                        placeholder="you@example.com"
+                        placeholder={t('login_email_placeholder')}
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && handleLogin()}
@@ -60,7 +60,7 @@ export default function Login() {
                     <input
                         className="input"
                         type="password"
-                        placeholder="••••••••"
+                        placeholder={t('login_password_placeholder')}
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && handleLogin()}
@@ -75,7 +75,7 @@ export default function Login() {
                     disabled={loading}
                 >
                     {loading
-                        ? <><i className="fa-solid fa-circle-notch spinner" /> Signing in…</>
+                        ? <><i className="fa-solid fa-circle-notch spinner" /> {t('login_signing_in')}</>
                         : t('login_button')
                     }
                 </button>

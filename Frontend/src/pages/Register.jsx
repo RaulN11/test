@@ -37,7 +37,9 @@ export default function Register() {
                         <span style={{ color: 'var(--accent)' }}>Car</span>
                         <span className="gradient-text">Ket</span>
                     </div>
-                    <h1 style={{ fontSize: '21px', fontWeight: 700, marginBottom: '6px' }}>Create your account</h1>
+                    <h1 style={{ fontSize: '21px', fontWeight: 700, marginBottom: '6px' }}>
+                        {t('register_welcome')}
+                    </h1>
                     <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
                         {t('register_have_account')}{' '}
                         <Link to="/login" style={{ color: 'var(--primary-light)', fontWeight: 600 }}>
@@ -50,19 +52,19 @@ export default function Register() {
                     <div className="form-group" style={{ margin: 0 }}>
                         <label className="label">{t('register_firstname')}</label>
                         <input className="input" type="text" name="firstName"
-                               placeholder="John" onChange={handleChange} />
+                               placeholder={t('register_firstname_placeholder')} onChange={handleChange} />
                     </div>
                     <div className="form-group" style={{ margin: 0 }}>
                         <label className="label">{t('register_lastname')}</label>
                         <input className="input" type="text" name="lastName"
-                               placeholder="Doe" onChange={handleChange} />
+                               placeholder={t('register_lastname_placeholder')} onChange={handleChange} />
                     </div>
                 </div>
 
                 <div className="form-group" style={{ marginTop: '16px' }}>
                     <label className="label">{t('register_email')}</label>
                     <input className="input" type="email" name="email"
-                           placeholder="you@example.com" onChange={handleChange} />
+                           placeholder={t('register_email_placeholder')} onChange={handleChange} />
                 </div>
 
                 <div className="form-group">
@@ -76,7 +78,7 @@ export default function Register() {
                 <div className="form-group">
                     <label className="label">{t('register_password')}</label>
                     <input className="input" type="password" name="password"
-                           placeholder="••••••••" onChange={handleChange} />
+                           placeholder={t('register_password_placeholder')} onChange={handleChange} />
                 </div>
 
                 <ErrorMessage message={error} />
@@ -87,7 +89,7 @@ export default function Register() {
                     disabled={loading}
                 >
                     {loading
-                        ? <><i className="fa-solid fa-circle-notch spinner" /> Creating account…</>
+                        ? <><i className="fa-solid fa-circle-notch spinner" /> {t('register_creating')}</>
                         : t('register_button')
                     }
                 </button>

@@ -32,15 +32,17 @@ export default function Sell() {
     }
 
     return (
-        <div className="page fade-in">
-            <div className="page-header">
+        <div className="fade-in" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 24px' }}>
+            {/* Page header — centered */}
+            <div style={{ width: '100%', maxWidth: 640, marginBottom: '28px', textAlign: 'center' }}>
                 <h1 className="page-title">
                     {t('sell_title')} <span className="gradient-text">{t('sell_title_accent')}</span>
                 </h1>
                 <p className="page-sub">Fill in your car's details and publish your listing.</p>
             </div>
 
-            <div style={{ maxWidth: 640, margin: '0 auto'}}>
+            {/* Form card — centered */}
+            <div style={{ width: '100%', maxWidth: 640 }}>
                 <div className="card" style={{ padding: '32px' }}>
                     <h2 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '24px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         Car Details
@@ -78,19 +80,20 @@ export default function Sell() {
 
                     <div className="form-group" style={{ marginTop: '16px' }}>
                         <label className="label">{t('sell_image')}</label>
-                        <div style={{
-                            position: 'relative',
-                            border: '2px dashed var(--border)',
-                            borderRadius: 'var(--radius-sm)',
-                            padding: '24px',
-                            textAlign: 'center',
-                            cursor: 'pointer',
-                            transition: 'border-color 0.2s',
-                        }}
-                             onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary-light)'}
-                             onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                        <div
+                            style={{
+                                position: 'relative',
+                                border: '2px dashed var(--border)',
+                                borderRadius: 'var(--radius-sm)',
+                                padding: '24px',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+                                transition: 'border-color 0.2s',
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary-light)'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
                         >
-                            <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: 28, color: 'var(--text-dim)', marginBottom: 8 }} />
+                            <i className="fa-solid fa-cloud-arrow-up" style={{ fontSize: 28, color: 'var(--text-dim)', marginBottom: 8, display: 'block' }} />
                             <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: 8 }}>
                                 {image ? image.name : 'Click or drag to upload an image'}
                             </p>

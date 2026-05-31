@@ -25,15 +25,13 @@ export default function Search() {
             <div className="hero">
                 <div className="hero-eyebrow">
                     <i className="fa-solid fa-car" />
-                    Romania's car marketplace
+                    {t('search_eyebrow')}
                 </div>
                 <h1 className="hero-title">
-                    Find your{' '}
-                    <span className="gradient-text">perfect car</span>
+                    {t('search_hero_title')}{' '}
+                    <span className="gradient-text">{t('search_hero_accent')}</span>
                 </h1>
-                <p className="hero-sub">
-                    Browse thousands of listings from verified sellers across the country.
-                </p>
+                <p className="hero-sub">{t('search_hero_sub')}</p>
 
                 {/* Search box */}
                 <div className="search-box fade-in">
@@ -43,7 +41,7 @@ export default function Search() {
                             <input
                                 className="input"
                                 type="text"
-                                placeholder="e.g. BMW"
+                                placeholder={t('search_brand_placeholder')}
                                 value={brand}
                                 onChange={e => setBrand(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && handleSearch()}
@@ -54,7 +52,7 @@ export default function Search() {
                             <input
                                 className="input"
                                 type="text"
-                                placeholder="e.g. M3"
+                                placeholder={t('search_model_placeholder')}
                                 value={model}
                                 onChange={e => setModel(e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && handleSearch()}
@@ -63,15 +61,12 @@ export default function Search() {
                         <div>
                             <label className="label">{t('search_chassis')}</label>
                             <select className="input" value={chassis} onChange={e => setChassis(e.target.value)}>
-                                <option value="">Any type</option>
+                                <option value="">{t('search_chassis_placeholder')}</option>
                                 {CHASSIS.map(c => <option key={c} value={c}>{t(`chassis_${c}`)}</option>)}
                             </select>
                         </div>
                     </div>
-                    <button
-                        className="btn btn-primary btn-full btn-lg"
-                        onClick={handleSearch}
-                    >
+                    <button className="btn btn-primary btn-full btn-lg" onClick={handleSearch}>
                         <i className="fa-solid fa-magnifying-glass" />
                         {t('search_button')}
                     </button>
@@ -83,7 +78,11 @@ export default function Search() {
                 maxWidth: 560, margin: '0 auto 40px', padding: '0 24px',
                 display: 'flex', justifyContent: 'space-around'
             }}>
-                {[['10k+','Listings'],['5k+','Sellers'],['99%','Satisfaction']].map(([num, label]) => (
+                {[
+                    ['10k+', t('search_stat_listings')],
+                    ['5k+',  t('search_stat_sellers')],
+                    ['99%',  t('search_stat_satisfaction')],
+                ].map(([num, label]) => (
                     <div key={label} style={{ textAlign: 'center' }}>
                         <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--accent)' }}>{num}</div>
                         <div style={{ fontSize: '12px', color: 'var(--text-dim)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
