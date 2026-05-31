@@ -40,7 +40,7 @@ export default function Sell() {
                 <p className="page-sub">Fill in your car's details and publish your listing.</p>
             </div>
 
-            <div style={{ maxWidth: 640 }}>
+            <div style={{ maxWidth: 640, margin: '0 auto'}}>
                 <div className="card" style={{ padding: '32px' }}>
                     <h2 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '24px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         Car Details
@@ -79,6 +79,7 @@ export default function Sell() {
                     <div className="form-group" style={{ marginTop: '16px' }}>
                         <label className="label">{t('sell_image')}</label>
                         <div style={{
+                            position: 'relative',
                             border: '2px dashed var(--border)',
                             borderRadius: 'var(--radius-sm)',
                             padding: '24px',
