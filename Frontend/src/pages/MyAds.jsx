@@ -1,80 +1,76 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api/api.js'
-import { useLanguage } from "../context/LanguageContext.jsx"
+import { useLanguage } from '../context/LanguageContext.jsx'
+import ErrorMessage from '../components/ErrorMessage.jsx'
 
 export default function MyAds() {
     const [ads, setAds] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
     const { t } = useLanguage()
 
     useEffect(() => {
         api.getMyAds()
             .then(setAds)
+            .catch(e => setError(e.message))
             .finally(() => setLoading(false))
     }, [])
 
-    if (loading) return (
-        <p style={{ textAlign: 'center', fontFamily: 'Oswald', fontSize: '24px', marginTop: '40px' }}>
-            {t('myads_loading')}
-        </p>
-    )
-
     return (
-        <div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <h2 style={{ fontFamily: 'Oswald', fontSize: '40px', margin: '20px 0' }}>
-                    {t('myads_title')} <span style={{ color: 'orange' }}>{t('myads_title_accent')}</span>
-                </h2>
+        <div className="page fade-in">
+            <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h1 className="page-title">
+                        {t('myads_title')} <span className="gradient-text">{t('myads_title_accent')}</span>
+                    </h1>
+                    <p className="page-sub">{loading ? '…' : `${ads.length} active listings`}</p>
+                </div>
+                <Link to="/sell">
+                    <button className="btn btn-primary">
+                        <i className="fa-solid fa-plus" /> New listing
+                    </button>
+                </Link>
             </div>
 
-            {ads.length === 0 && (
-                <p style={{ textAlign: 'center', fontFamily: 'Oswald', fontSize: '24px', marginTop: '40px' }}>
-                    {t('myads_none')} <Link to="/sell" style={{ color: 'orange' }}>{t('myads_create')}</Link>
-                </p>
+            <ErrorMessage message={error} />
+
+            {loading && (
+                <div className="empty-state">
+                    <i className="fa-solid fa-circle-notch spinner" style={{ fontSize: 36 }} />
+                    <p>{t('myads_loading')}</p>
+                </div>
             )}
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '30px',
-                padding: '20px 5%',
-                marginTop: '20px'
-            }}>
+            {!loading && ads.length === 0 && !error && (
+                <div className="empty-state">
+                    <i className="fa-solid fa-car" />
+                    <p>{t('myads_none')}</p>
+                    <Link to="/sell">
+                        <button className="btn btn-primary">
+                            <i className="fa-solid fa-plus" /> {t('myads_create')}
+                        </button>
+                    </Link>
+                </div>
+            )}
+
+            <div className="ad-grid">
                 {ads.map(ad => (
-                    <Link key={ad.id} to={`/ad/${ad.id}`} style={{ textDecoration: 'none', color: 'white' }}>
-                        <div
-                            style={{
-                                backgroundColor: 'rgba(20,20,20,0.6)',
-                                backdropFilter: 'blur(15px)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '12px',
-                                padding: '20px',
-                                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                                transition: 'transform 0.3s ease'
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'}
-                            onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                        >
-                            <h3 style={{ color: 'orange', marginBottom: '15px', fontSize: '24px' }}>
-                                {ad.car?.brand} {ad.car?.model}
-                            </h3>
-                            {ad.images && ad.images.length > 0 && (
-                                <img
-                                    src={`http://localhost:8082${ad.images[0]}`}
-                                    alt="Car"
-                                    style={{
-                                        width: '100%',
-                                        aspectRatio: '16/9',
-                                        objectFit: 'cover',
-                                        borderRadius: '6px',
-                                        marginBottom: '10px'
-                                    }}
-                                />
-                            )}
-                            <p style={{ fontFamily: 'Oswald', fontSize: '18px' }}>{ad.price}$</p>
-                            <p style={{ fontFamily: 'Oswald', fontSize: '16px', color: '#ccc' }}>{ad.year}</p>
-                            <p style={{ fontFamily: 'Oswald', fontSize: '14px', color: '#aaa' }}>{ad.car?.chassis}</p>
+                    <Link key={ad.id} to={`/ad/${ad.id}`}>
+                        <div className="ad-card">
+                            {ad.images?.length > 0
+                                ? <img className="ad-img" src={`http://localhost:8082${ad.images[0]}`} alt="Car" />
+                                : <div className="ad-img-placeholder"><i className="fa-solid fa-car" /></div>
+                            }
+                            <div className="ad-body">
+                                <p className="ad-title">{ad.car?.brand} {ad.car?.model}</p>
+                                <p className="ad-seller">{ad.year} · {ad.car?.chassis}</p>
+                                <p className="ad-price">${ad.price?.toLocaleString()}</p>
+                                <div className="ad-tags">
+                                    <span className="badge badge-accent">Your listing</span>
+                                    <span className="badge badge-surface">{ad.car?.chassis}</span>
+                                </div>
+                            </div>
                         </div>
                     </Link>
                 ))}

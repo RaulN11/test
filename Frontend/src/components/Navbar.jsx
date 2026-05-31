@@ -1,19 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { api } from '../api/api.js'
 import { useLanguage } from '../context/LanguageContext'
 
 export default function Navbar() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [loggedIn, setLoggedIn] = useState(api.isLoggedIn())
-
-
     const { currentLang, changeLanguage, t } = useLanguage()
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setLoggedIn(api.isLoggedIn())
-        }, 500)
+        const interval = setInterval(() => setLoggedIn(api.isLoggedIn()), 500)
         return () => clearInterval(interval)
     }, [])
 
@@ -22,79 +19,70 @@ export default function Navbar() {
         setLoggedIn(false)
         navigate('/login')
     }
-    const flagStyle = (l) => ({
-        width: '30px',
-        height: '20px',
-        cursor: 'pointer',
-        borderRadius: '4px',
-        objectFit: 'cover',
-        border: currentLang === l ? '2px solid rgb(234,123,16)' : '2px solid transparent',
-        transition: 'border 0.2s ease'
-    })
+
+    const active = (path) =>
+        location.pathname === path || location.pathname.startsWith(path + '/')
+            ? 'active' : ''
 
     return (
-        <div style={{
-            padding: '15px',
-            background: 'linear-gradient(135deg, rgba(64,58,56,0.8) 0%, rgba(70,70,85,0.8) 100%)',
-            backdropFilter: 'blur(10px)',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'sticky',
-            top: 0,
-            zIndex: 10
-        }}>
-            <Link to="/search">
-                <h2 style={{ fontSize: '50px', margin: '0 0 0 20px' }}>
-                    <span style={{ color: 'orange' }}>Car</span>Ket
-                </h2>
-            </Link>
-            <div style={{ display: 'flex', gap: '50px', paddingRight: '30px', alignItems: 'center' }}>
-                {loggedIn && (
-                    <Link to="/sell">
-                        <i className="fa-solid fa-money-bill" style={{ color: 'rgb(234,123,16)', fontSize: '25px' }}></i>
-                    </Link>
-                )}
-                <Link to="/search">
-                    <i className="fa-solid fa-magnifying-glass" style={{ color: 'rgb(234,123,16)', fontSize: '25px' }}></i>
+        <nav className="navbar">
+            <div className="navbar-inner">
+                <Link to="/search" className="nav-logo">
+                    <span style={{ color: 'var(--accent)' }}>Car</span>
+                    <span className="gradient-text">Ket</span>
                 </Link>
-                {loggedIn && (
-                    <Link to="/my-ads">
-                        <i className="fa-solid fa-user" style={{ color: 'rgb(234,123,16)', fontSize: '25px' }}></i>
+
+                <div className="nav-actions">
+                    <Link to="/search">
+                        <button className={`nav-icon-btn ${active('/search')}`} title="Search">
+                            <i className="fa-solid fa-magnifying-glass" />
+                        </button>
                     </Link>
-                )}
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <img
-                        src="https://flagcdn.com/gb.svg"
-                        alt="English"
-                        style={flagStyle('en')}
-                        onClick={() => changeLanguage('en')}
-                    />
-                    <img
-                        src="https://flagcdn.com/ro.svg"
-                        alt="Romanian"
-                        style={flagStyle('ro')}
-                        onClick={() => changeLanguage('ro')}
-                    />
-                    <img
-                        src="https://flagcdn.com/cn.svg"
-                        alt="Chinese"
-                        style={flagStyle('zh')}
-                        onClick={() => changeLanguage('zh')}
-                    />
+
+                    {loggedIn && <>
+                        <Link to="/sell">
+                            <button className={`nav-icon-btn ${active('/sell')}`} title="Sell a car">
+                                <i className="fa-solid fa-tag" />
+                            </button>
+                        </Link>
+                        <Link to="/my-ads">
+                            <button className={`nav-icon-btn ${active('/my-ads')}`} title="My listings">
+                                <i className="fa-solid fa-rectangle-list" />
+                            </button>
+                        </Link>
+                        <Link to="/chat">
+                            <button className={`nav-icon-btn ${active('/chat')}`} title="Messages">
+                                <i className="fa-solid fa-comment-dots" />
+                            </button>
+                        </Link>
+                    </>}
+
+                    <div className="nav-divider" />
+
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                        {[['en','gb'],['ro','ro'],['zh','cn']].map(([code, flag]) => (
+                            <button
+                                key={code}
+                                className={`lang-btn ${currentLang === code ? 'active' : ''}`}
+                                onClick={() => changeLanguage(code)}
+                            >
+                                <img src={`https://flagcdn.com/${flag}.svg`} alt={code} />
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="nav-divider" />
+
+                    {loggedIn
+                        ? <button onClick={handleLogout} className="btn btn-outline btn-sm">
+                            {t('nav_logout')}
+                        </button>
+                        : <Link to="/login">
+                            <button className="btn btn-primary btn-sm">Sign in</button>
+                        </Link>
+                    }
                 </div>
-                {loggedIn && (
-                    <button onClick={handleLogout} style={{
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: 'white',
-                        fontFamily: 'Oswald',
-                        fontSize: '18px'
-                    }}>{t('nav_logout')}</button>
-                )}
             </div>
-        </div>
+        </nav>
     )
 }

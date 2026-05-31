@@ -1,55 +1,89 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../api/api.js'
-import { formStyle, inputStyle, labelStyle, buttonStyle, pageWrapper, heroTitle } from '../components/styles.js'
 import { useLanguage } from '../context/LanguageContext'
+import ErrorMessage from '../components/ErrorMessage.jsx'
 
 export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const { t } = useLanguage()
 
     const handleLogin = async () => {
+        setLoading(true); setError('')
         try {
             await api.login(email, password)
             navigate('/search')
-        } catch {
-            setError(t('login_error'))
+        } catch(e) {
+            setError(e.message)
+        } finally {
+            setLoading(false)
         }
     }
 
     return (
-        <div style={pageWrapper}>
-            <h2 style={heroTitle}>
-                {t('login_title')} <span style={{ color: 'orange' }}>CarKet</span>
-            </h2>
-            <div style={formStyle}>
-                <label style={labelStyle}>{t('login_email')}</label>
-                <input
-                    style={inputStyle}
-                    type="email"
-                    placeholder={t('login_email')}
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                />
-                <label style={labelStyle}>{t('login_password')}</label>
-                <input
-                    style={inputStyle}
-                    type="password"
-                    placeholder={t('login_password')}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                />
-                {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
-                <button style={buttonStyle} onClick={handleLogin}>{t('login_button')}</button>
-            </div>
-            <div style={{ fontFamily: 'Oswald', fontSize: '20px', marginTop: '20px', textAlign: 'center' }}>
-                <p>{t('login_new')} <Link to="/register" style={{ color: 'orange' }}>{t('login_create')}</Link></p>
-                <p>{t('login_guest')} <Link to="/search" style={{ color: 'orange' }}>{t('login_guest_link')}</Link></p>
+        <div className="auth-wrap">
+            <div className="auth-card fade-in">
+                <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+                    <div className="nav-logo" style={{ fontSize: '30px', marginBottom: '16px', display: 'block' }}>
+                        <span style={{ color: 'var(--accent)' }}>Car</span>
+                        <span className="gradient-text">Ket</span>
+                    </div>
+                    <h1 style={{ fontSize: '21px', fontWeight: 700, marginBottom: '6px' }}>
+                        Welcome back
+                    </h1>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
+                        {t('login_new')}{' '}
+                        <Link to="/register" style={{ color: 'var(--primary-light)', fontWeight: 600 }}>
+                            {t('login_create')}
+                        </Link>
+                    </p>
+                </div>
+
+                <div className="form-group">
+                    <label className="label">{t('login_email')}</label>
+                    <input
+                        className="input"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label className="label">{t('login_password')}</label>
+                    <input
+                        className="input"
+                        type="password"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                    />
+                </div>
+
+                <ErrorMessage message={error} />
+
+                <button
+                    className="btn btn-primary btn-full btn-lg"
+                    onClick={handleLogin}
+                    disabled={loading}
+                >
+                    {loading
+                        ? <><i className="fa-solid fa-circle-notch spinner" /> Signing in…</>
+                        : t('login_button')
+                    }
+                </button>
+
+                <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px', color: 'var(--text-dim)' }}>
+                    {t('login_guest')}{' '}
+                    <Link to="/search" style={{ color: 'var(--text-muted)' }}>{t('login_guest_link')}</Link>
+                </p>
             </div>
         </div>
     )

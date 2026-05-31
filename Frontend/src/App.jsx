@@ -7,6 +7,7 @@ import Results from './pages/Result.jsx'
 import Sell from './pages/Sell'
 import AdDetails from './pages/AdDetails.jsx'
 import MyAds from './pages/MyAds.jsx'
+import Chat from './pages/Chat'
 import { LanguageProvider } from './context/LanguageContext'
 
 function ProtectedRoute({ children }) {
@@ -33,6 +34,12 @@ export default function App() {
                         <ProtectedRoute><MyAds /></ProtectedRoute>
                     } />
                     <Route path="*" element={<Navigate to="/search" />} />
+                    <Route path="/chat/:conversationId" element={
+                        <ProtectedRoute><Chat /></ProtectedRoute>
+                    } />
+                    <Route path="/chat" element={
+                        <ProtectedRoute><Chat /></ProtectedRoute>
+                    } />
                 </Routes>
             </BrowserRouter>
         </LanguageProvider>
